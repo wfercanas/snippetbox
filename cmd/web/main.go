@@ -9,11 +9,12 @@ import (
 
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP Network address")
+	staticDir := flag.String("staticDir", "./ui/static/", "Path to static assets")
 	flag.Parse()
 
 	mux := http.NewServeMux()
 
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
+	fileServer := http.FileServer(http.Dir(*staticDir))
 	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
 
 	mux.HandleFunc("GET /{$}", home)
