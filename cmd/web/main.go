@@ -2,10 +2,12 @@ package main
 
 import (
 	"flag"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 )
+
+var logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP Network address")
@@ -22,11 +24,11 @@ func main() {
 	mux.HandleFunc("GET /snippet/create", snippetCreate)
 	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
-	log.Println("Starting server on", *addr)
+	logger.Info("Starting server", "addr", *addr)
 
 	err := http.ListenAndServe(*addr, mux)
 	if err != nil {
-		log.Fatal(err)
+		logger.Error(err.Error())
 		os.Exit(1)
 	}
 }
