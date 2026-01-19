@@ -8,11 +8,13 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/wfercanas/snippetbox/internal/models"
 )
 
 type application struct {
 	logger    *slog.Logger
 	staticDir *string
+	snippets  *models.SnippetModel
 }
 
 func main() {
@@ -34,6 +36,7 @@ func main() {
 	app := &application{
 		logger:    logger,
 		staticDir: staticDir,
+		snippets:  &models.SnippetModel{DB: db},
 	}
 
 	logger.Info("Starting server", "addr", *addr)
