@@ -21,7 +21,10 @@
     <header>
       <h1><a href="/">Snippetbox</a></h1>
     </header>
-    {{template "nav" .}}
+      {{with .Flash}}
+        <div class="flash">{{.}}</div>
+      {{end}}
+      {{template "nav" .}}
     <main>{{template "main" .}}</main>
     <footer>Powered by <a href="https://golang.org/">Go</a> in {{.CurrentYear}}</footer>
   </body>
