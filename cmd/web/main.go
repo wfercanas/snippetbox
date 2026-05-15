@@ -61,13 +61,16 @@ func main() {
 		sessionManager: sessionManager,
 	}
 
-	logger.Info("Starting server", "addr", *addr)
-
-	err = http.ListenAndServe(*addr, app.routes())
-	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
+	srv := &http.Server{
+		Addr:    *addr,
+		Handler: app.routes(),
 	}
+
+	logger.Info("Starting server", "addr", srv.Addr)
+
+	err = srv.ListenAndServe()
+	logger.Error(err.Error())
+	os.Exit(1)
 }
 
 func openBD(dsn string) (*sql.DB, error) {
