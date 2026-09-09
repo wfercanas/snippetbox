@@ -22,6 +22,7 @@ type application struct {
 	staticDir      *string
 	templateCache  map[string]*template.Template
 	snippets       *models.SnippetModel
+	users          *models.UserModel
 	formDecoder    *form.Decoder
 	sessionManager *scs.SessionManager
 }
@@ -58,6 +59,7 @@ func main() {
 		staticDir:      staticDir,
 		templateCache:  templateCache,
 		snippets:       &models.SnippetModel{DB: db},
+		users:          &models.UserModel{DB: db},
 		formDecoder:    formDecoder,
 		sessionManager: sessionManager,
 	}
