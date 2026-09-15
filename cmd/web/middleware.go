@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+
+	"github.com/justinas/nosurf"
 )
 
 func commonHeaders(next http.Handler) http.Handler {
@@ -17,6 +19,17 @@ func commonHeaders(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func preventCSRF(next http.Handler) http.Handler {
+	csrfHandler := nosurf.New(next)
+	csrfHandler.SetBaseCookie(http.Cookie{
+		HttpOnly: true,
+		Path:     "/",
+		Secure:   true,
+	})
+
+	return csrfHandler
 }
 
 func (app *application) logRequest(next http.Handler) http.Handler {
