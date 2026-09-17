@@ -5,6 +5,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"net/http/cookiejar"
 	"net/http/httptest"
 	"testing"
 )
@@ -24,6 +25,17 @@ type testServer struct {
 
 func newTestServer(t *testing.T, h http.Handler) *testServer {
 	ts := httptest.NewTLSServer(h)
+
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ts.Client().Jar = jar
+
+	ts.Client().CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		return http.ErrUseLastResponse
+	}
+
 	return &testServer{ts}
 }
 
@@ -32,6 +44,14 @@ type testResponse struct {
 	headers http.Header
 	cookies []*http.Cookie
 	body    string
+}
+
+func (ts *testServer) resetClientCookieJar(t testing.T) {
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ts.Client().Jar = jar
 }
 
 func (ts *testServer) get(t *testing.T, path string) testResponse {
