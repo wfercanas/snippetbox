@@ -4,13 +4,14 @@ import (
 	"net/http"
 
 	"github.com/justinas/alice"
+	"github.com/wfercanas/snippetbox/ui"
 )
 
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
-	fileServer := http.FileServer(http.Dir(*app.staticDir))
-	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
+	//fileServer := http.FileServer(http.Dir(*app.staticDir))
+	mux.Handle("GET /static/", http.FileServerFS(ui.Files))
 
 	mux.HandleFunc("GET /ping", ping)
 

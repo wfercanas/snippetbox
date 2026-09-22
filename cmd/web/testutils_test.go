@@ -67,7 +67,7 @@ type testResponse struct {
 	body    string
 }
 
-func (ts *testServer) resetClientCookieJar(t testing.T) {
+func (ts *testServer) resetClientCookieJar(t *testing.T) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		t.Fatal(err)
